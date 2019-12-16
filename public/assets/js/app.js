@@ -96,6 +96,7 @@ $(document).ready(function() {
     });
 
     $(document).on("click", "#deleteNote", function() {
+        $("#commentsModal").modal("hide");
         var noteId = $(this).attr("data-noteId");
         $.ajax({
             method: "DELETE",
@@ -108,11 +109,28 @@ $(document).ready(function() {
     $(document).on("click", ".articleDelete", function() {
         var articleId = $(this).attr("data-id");
         $.ajax({
-            method: "DELETE",
+            method: "GET",
             url: "/articles/" + articleId
-        })
-        .then(function(data) {
-            location.reload();
-        });
+            })
+            .then(function(data) {
+                if (data.note.length !== 0) {
+                    for (var i=0; i < data.note.length; i++){
+                        var noteId = data.note[i]._id;
+                        $.ajax({
+                            method: "DELETE",
+                            url: "/notes/" + noteId
+                        })
+                        .then(function(data) {
+                        });
+                    }
+                }                
+                $.ajax({
+                    method: "DELETE",
+                    url: "/articles/" + articleId
+                })
+                .then(function(data) {
+                    location.reload();
+                });
+            });
     });
 });
