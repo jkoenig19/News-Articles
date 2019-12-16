@@ -35,17 +35,32 @@ $(document).ready(function() {
         var articleId = $(this).attr("data-id");
         var saveArticle = newsArticles[articleId];
         $.ajax({
-            method: "POST",
-            url: "/saveArticle",
-            data: {
-                headline: saveArticle.headline,
-                summary: saveArticle.summary,
-                url: saveArticle.url
-            }
-        })
-        .then(function(data) {
-            location.replace("/saved");
-        });
+            method: "GET",
+            url: "/articles"
+            })
+            .then(function(data) {
+                for (var i=0; i < data.length; i++){
+                    if (data[i].headline === saveArticle.headline){
+                        $("#countModal").modal("show");
+                        $("#count").empty();
+                        $("#count").append("Article already saved!");
+                    }
+                    else if (data[i].headline !== saveArticle.headline && i === data.length-1){
+                        $.ajax({
+                            method: "POST",
+                            url: "/saveArticle",
+                            data: {
+                                headline: saveArticle.headline,
+                                summary: saveArticle.summary,
+                                url: saveArticle.url
+                            }
+                        })
+                        .then(function(data) {
+                            location.replace("/saved");
+                        });
+                    }
+                }
+            });
     });
 
     $(document).on("click", ".articleNotes", function() {
