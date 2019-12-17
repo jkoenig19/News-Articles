@@ -39,6 +39,20 @@ $(document).ready(function() {
             url: "/articles"
             })
             .then(function(data) {
+                if (data.length === 0){
+                    $.ajax({
+                        method: "POST",
+                        url: "/saveArticle",
+                        data: {
+                            headline: saveArticle.headline,
+                            summary: saveArticle.summary,
+                            url: saveArticle.url
+                        }
+                    })
+                    .then(function(data) {
+                        location.replace("/saved");
+                    });
+                }
                 for (var i=0; i < data.length; i++){
                     if (data[i].headline === saveArticle.headline){
                         $("#countModal").modal("show");

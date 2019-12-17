@@ -20,8 +20,7 @@ app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 
 var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
-var uri = "mongodb://<dbuser>:<dbpassword>@ds253398.mlab.com:53398/heroku_tgxr54rl"
-mongoose.connect(uri, { useNewUrlParser: true });
+mongoose.connect(MONGODB_URI, { useNewUrlParser: true });
 
 app.get("/", function(req, res) {
   res.render("index");
